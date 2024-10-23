@@ -13,8 +13,6 @@ public class UnitermApplication extends Application {
     public void start(Stage stage) throws IOException {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-
-
         FXMLLoader fxmlLoader = new FXMLLoader(UnitermApplication.class.getResource("uniterm-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         stage.setTitle("Uniterm");

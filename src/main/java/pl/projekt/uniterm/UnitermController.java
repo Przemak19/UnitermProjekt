@@ -8,50 +8,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
+import javafx.stage.Stage;
 
 public class UnitermController {
 
     @FXML
     private ScrollPane mainScrollPane;
 
-    private QuadCurve quadCurve = new QuadCurve();
-    private Label exp1 = new Label();
-    private Label exp2 = new Label();
-    private Label semicolonHorizontal = new Label();
-    private VBox mainVBox = new VBox(10);
-    private HBox labelBox = new HBox(10);
-
-    @FXML
-    protected void onHorizontalButtonClick() {
-
-        String text1 = "wyrazenie 1 11111435345323233333323232323232332";
-        String text2 = "wyrazenie 2 323445232332323213231231231231235435345345345345";
-
-        //exp1.setText(text1);
-        //exp2.setText(text2);
-
-        int count1 = countLetters(text1);
-        int count2 = countLetters(text2);
-
-        if(count1 > count2) {
-            //quadCurve.setStartX(count1 * (-35));
-            //quadCurve.setEndX(count1 * 35);
-            //semicolonHorizontal.setLayoutX(count1 * 10);
-        } else {
-            //quadCurve.setStartX(count2 * (-35));
-            //quadCurve.setEndX(count2 * 35);
-            //semicolonHorizontal.setLayoutX(count2 * 10);
-        }
-
-        //textFlow.setLayoutX(quadCurve.getStartX() + quadCurve.getLayoutX());
-        //textFlow.setMinWidth(Math.abs(quadCurve.getStartX()) + Math.abs(quadCurve.getEndX()));
-
-        //Exp1.setLayoutX(quadCurve.getStartX() + count1 * 10);
-        //Exp2.setLayoutX(quadCurve.getEndX() - count2 * 10);
-
-        //exp1.setVisible(true);
-        //exp2.setVisible(true);
-    }
+    private final QuadCurve quadCurve = new QuadCurve();
+    private final Label exp1 = new Label();
+    private final Label exp2 = new Label();
+    private final Label semicolonHorizontal = new Label();
+    private final VBox mainVBox = new VBox(10);
+    private final HBox labelBox = new HBox(10);
 
     @FXML
     protected void onVerticalButtonClick() {
@@ -62,8 +31,8 @@ public class UnitermController {
 
     @FXML
     protected  void onCloseMenuButtonClick() {
-        //Stage stage = (Stage) quadCurve.getScene().getWindow();
-        //stage.close();
+        Stage stage = (Stage) mainScrollPane.getScene().getWindow();
+        stage.close();
     }
 
     //metoda dodatkowa do zliczania liczby znakow w ciagu znakow
@@ -80,8 +49,10 @@ public class UnitermController {
         return count;
     }
 
-    public void probaMikrofonu() {
+    @FXML
+    protected void onHorizontalButtonClick() {
 
+        quadCurve.setVisible(false);
         quadCurve.setLayoutX(0);
         quadCurve.setLayoutY(0);
         quadCurve.setStartY(0);
@@ -92,32 +63,47 @@ public class UnitermController {
         quadCurve.setStroke(Color.BLACK);
         quadCurve.setStrokeWidth(1);
 
-        semicolonHorizontal.setText(";");
+        exp1.setVisible(false);
+        exp2.setVisible(false);
+        semicolonHorizontal.setVisible(false);
 
         labelBox.setAlignment(Pos.CENTER);
+        labelBox.getChildren().clear();
         labelBox.getChildren().addAll(exp1, semicolonHorizontal, exp2);
 
         mainVBox.getChildren().clear();
-        mainVBox.setAlignment(Pos.CENTER);
+        mainVBox.setAlignment(Pos.TOP_CENTER);
         mainVBox.getChildren().addAll(quadCurve, labelBox);
 
         mainScrollPane.setContent(mainVBox);
+
+        DialogBox.showInputDialog("Poziomy uniterm sekwencjonowania", "Podaj wyrażenia dla poziomego unitermu sekwencjonowania",exp1,exp2);
+        semicolonHorizontal.setText(";");
 
         updateQuadCurve();
     }
 
     private void updateQuadCurve() {
 
-        DialogBox.showInputDialog("Poziomy uniterm sekwencjonowania", "Podaj wyrażenia dla poziomego unitermu sekwencjonowania",exp1,exp2);
 
-        double exp1CenterX = exp1.localToScene(exp1.getBoundsInLocal()).getMinX() + exp1.getWidth() / 2;
-        double exp2CenterX = exp2.localToScene(exp2.getBoundsInLocal()).getMinX() + exp2.getWidth() / 2;
+        double unitermMinX = labelBox.localToScene(labelBox.getLayoutBounds()).getMinX();
+        double unitermMaxX = labelBox.localToScene(labelBox.getLayoutBounds()).getMaxX();
 
-        System.out.println(exp1CenterX + " " + exp2CenterX);
+        double exp1MinX = exp1.localToScene(exp1.getLayoutBounds()).getMinX();
+        double exp2MaxX = exp2.localToParent(exp2.getBoundsInLocal()).getMaxX();
 
-        quadCurve.setStartX(-exp1CenterX);
-        quadCurve.setEndX(exp2CenterX);
-        quadCurve.setControlX((exp1CenterX + exp2CenterX) / 2);
+        System.out.println( unitermMinX + " " + unitermMaxX + "   hboxy");
+
+        System.out.println(exp1MinX + " " + exp2MaxX + "   expy");
+
+        exp1.setVisible(true);
+        exp2.setVisible(true);
+        semicolonHorizontal.setVisible(true);
+
+        quadCurve.setVisible(true);
+        quadCurve.setStartX(unitermMinX);
+        quadCurve.setEndX(unitermMaxX);
+        quadCurve.setControlX((unitermMinX + unitermMaxX) / 2);
     }
 
 }
