@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class DialogBox {
 
-    public static void showInputDialog(String title, String message, Label unitermExpressions) {
+    public static void showInputDialog(String title, String message, Label firstUnitermExpression, Label secondUnitermExpression) {
 
         Stage dialog = new Stage();
         dialog.setTitle(title);
@@ -42,7 +42,8 @@ public class DialogBox {
 
             if (!value1.isEmpty() && !value2.isEmpty()) {
 
-                unitermExpressions.setText(value1 + " ; " + value2);
+                firstUnitermExpression.setText(value1);
+                secondUnitermExpression.setText(value2);
                 dialog.close();
 
             } else {
